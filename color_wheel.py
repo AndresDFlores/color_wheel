@@ -1,3 +1,5 @@
+from operator import itemgetter
+
 from matplotlib import pyplot as plt
 import numpy as np
 import math
@@ -71,22 +73,49 @@ if __name__=='__main__':
         return tuple(python_rgb)
 
 
-    fig, ax = plt.subplots()
+    #  init figures
+    fig1, ax1 = plt.subplots()
+    fig2, ax2 = plt.subplots()
 
+
+    #  lower values (as low as 0)=darker, higher values (up to 1)=lighter
     color_vals = np.arange(0,1.1,0.1)
 
+
+    #  iterate through each angle in the circle
     for wheel_angle in np.arange(0, 360):  
         color_picker_class.get_rgb(theta=wheel_angle)
 
+
+        #  iterate through color values
         for val in color_vals:
             rgb_color = color_picker_class.set_color_value(color_val=val)
 
+            #  convert RGB code to Python syntax values
             python_rgb = get_python_color(rgb_color)
-            ax.scatter(wheel_angle, val, c = python_rgb)
+
+            #  plot colors
+            ax1.scatter(wheel_angle, val, color=python_rgb)
+
+            #  plot RGB decomposition
+            ax2.scatter(wheel_angle, python_rgb[0]*255, s=3, color=(1, 0, 0))
+            ax2.scatter(wheel_angle, python_rgb[1]*255, s=3, color=(0, 1, 0))
+            ax2.scatter(wheel_angle, python_rgb[2]*255, s=3, color=(0, 0, 1))
 
 
-    ax.set_title('CALCULATED COLOR WHEEL')
-    ax.set_xlabel('WHEEL ANGLE')
-    ax.set_ylabel('COLOR VALUE')
+    #  format figure 1
+    ax1.set_title('CALCULATED COLOR WHEEL')
+    ax1.set_xlabel('WHEEL ANGLE')
+    ax1.set_ylabel('COLOR VALUE (Darker/Lighter)')
 
-    plt.savefig('calculated_colors_plotted.png', dpi=400)
+
+    #  format figures 2
+    ax2.set_title('DECOMPOSED RGB')
+    ax2.set_xlabel('WHEEL ANGLE')
+    ax2.set_ylabel('RGB VALUE')
+
+
+    #  save figures
+    fig1.savefig('calculated_colors_plotted.png', dpi=400)
+    fig2.savefig('decomposed_rgb_plotted.png', dpi=400)
+
